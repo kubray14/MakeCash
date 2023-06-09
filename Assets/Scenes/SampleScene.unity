@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 338495198}
   - component: {fileID: 338495197}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: PipeBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -803,7 +803,7 @@ GameObject:
   - component: {fileID: 694625539}
   - component: {fileID: 694625538}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: IncomeBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -974,7 +974,7 @@ GameObject:
   - component: {fileID: 1015521689}
   - component: {fileID: 1015521688}
   m_Layer: 5
-  m_Name: Button
+  m_Name: SpeedBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1163,8 +1163,9 @@ GameObject:
   - component: {fileID: 1245714694}
   - component: {fileID: 1245714693}
   - component: {fileID: 1245714692}
+  - component: {fileID: 1245714696}
   m_Layer: 0
-  m_Name: Machine
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1248,6 +1249,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1245714696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245714691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65295d4a928687c49a88c23f21e63db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  money: 0
+  moneyAmount: 1
+  pipeSpeed: 1
+  pipeSpeedIncreaseAmount: 0.2
 --- !u!1 &1292473107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1563,6 +1580,7 @@ GameObject:
   - component: {fileID: 1403029198}
   - component: {fileID: 1403029197}
   - component: {fileID: 1403029196}
+  - component: {fileID: 1403029200}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1652,6 +1670,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1403029200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403029195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d45b0619f705b974da9dc90aa58f01a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedButton: {fileID: 1015521688}
+  speedCost: 1
+  incomeButton: {fileID: 694625538}
+  incomeCost: 2
+  pipeButton: {fileID: 338495197}
+  pipeCost: 3
 --- !u!1 &2023018864
 GameObject:
   m_ObjectHideFlags: 0

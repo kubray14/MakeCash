@@ -4,15 +4,43 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] float money = 0;
+    [SerializeField] private float moneyAmount = 1f;
+    [SerializeField] private float pipeSpeed = 1.0f;
+    [SerializeField] private float pipeSpeedIncreaseAmount = 0.2f;
+
+    private void Start()
     {
-        
+        EventManager.OnSpeedUpgrade.AddListener(IncreasePipeSpeed);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            IncreaseMoney();
+        }
+    }
+
+    private void IncreasePipeSpeed()
+    {
+        pipeSpeed += pipeSpeedIncreaseAmount;
+    }
+
+    private void IncreaseMoney()
+    {
+        money += moneyAmount;
+        EventManager.OnGainMoney.Invoke();
+    }
+
+    public void DecreaseMoney(float cost)
+    {
+        money -= cost;
+        EventManager.OnSpendMoney.Invoke();
+    }
+
+    public float GetMoney()
+    {
+        return money;
     }
 }
