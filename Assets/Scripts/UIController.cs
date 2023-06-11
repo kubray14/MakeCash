@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
@@ -14,6 +15,11 @@ public class UIController : MonoBehaviour
     [SerializeField] private float pipeCost;
     private PlayerController playerController;
 
+    [SerializeField] private Text money;
+    [SerializeField] private TextMeshProUGUI speedCost_Text;
+    [SerializeField] private TextMeshProUGUI incomeCost_Text;
+    [SerializeField] private TextMeshProUGUI pipeCost_Text;
+
     private void Awake()
     {
         playerController = FindObjectOfType<PlayerController>();
@@ -24,28 +30,36 @@ public class UIController : MonoBehaviour
         speedButton.onClick.AddListener(() =>
         {
             playerController.DecreaseMoney(speedCost);
+            speedCost += 3;
+            speedCost_Text.text = speedCost.ToString();
             EventManager.OnSpeedUpgrade.Invoke();
         });
 
         incomeButton.onClick.AddListener(() =>
         {
             playerController.DecreaseMoney(incomeCost);
+            incomeCost += 3;
+            incomeCost_Text.text = incomeCost.ToString();
             EventManager.OnSpeedUpgrade.Invoke();
         });
 
         pipeButton.onClick.AddListener(() =>
         {
             playerController.DecreaseMoney(pipeCost);
+            pipeCost += 3;
+            pipeCost_Text.text = pipeCost.ToString();
             EventManager.OnSpeedUpgrade.Invoke();
         });
 
-        EventManager.OnGainMoney.AddListener(() =>
+        EventManager.OnGainMoneyUI.AddListener(() =>
         {
+            money.text = ((int)(playerController.GetMoney())).ToString();
             CheckCostActive();
         });
 
         EventManager.OnSpendMoney.AddListener(() =>
         {
+            money.text = ((int)(playerController.GetMoney())).ToString();
             CheckCostInactive();
         });
 

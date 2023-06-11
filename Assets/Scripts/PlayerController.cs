@@ -9,17 +9,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float pipeSpeed = 1.0f;
     [SerializeField] private float pipeSpeedIncreaseAmount = 0.2f;
 
+
     private void Start()
     {
         EventManager.OnSpeedUpgrade.AddListener(IncreasePipeSpeed);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            IncreaseMoney();
-        }
+        EventManager.OnGainMoney.AddListener(IncreaseMoney);
     }
 
     private void IncreasePipeSpeed()
@@ -30,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private void IncreaseMoney()
     {
         money += moneyAmount;
-        EventManager.OnGainMoney.Invoke();
+        EventManager.OnGainMoneyUI.Invoke();
     }
 
     public void DecreaseMoney(float cost)
