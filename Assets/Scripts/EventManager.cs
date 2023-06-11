@@ -12,4 +12,6 @@ public static class EventManager
     public static UnityEvent OnPipeMerge = new UnityEvent();
     public static UnityEvent OnGainMoney = new UnityEvent();
     public static UnityEvent OnSpendMoney = new UnityEvent();
+
+    public static UnityEvent<Vector3> OnSpawnCoin = new UnityEvent<Vector3>();
 }

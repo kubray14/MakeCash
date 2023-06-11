@@ -9,8 +9,6 @@ public class CoinSpawner : MonoBehaviour
 
     private void SpawnCoin()
     {
-        GameObject coinClone = Instantiate(coinPrefab, transform.position - new Vector3(0, 0.1f, 0), coinPrefab.transform.rotation);
-        coinClone.GetComponent<Rigidbody>().AddForce(-(Vector3.up * 3 + Vector3.forward).normalized * force * .5f, ForceMode.Impulse);
-        coinClone.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere.normalized * force * 0.01f, ForceMode.Impulse);
+        EventManager.OnSpawnCoin.Invoke(transform.position - new Vector3(0, 0.1f, 0));
     }
 }
