@@ -19,7 +19,7 @@ public class CoinPool : MonoBehaviour
     {
         for (int i = 0; i < maxCoinCount; i++)
         {
-            GameObject createdCoin = Instantiate(coinPrefab, Vector3.zero, coinPrefab.transform.rotation);
+            GameObject createdCoin = Instantiate(coinPrefab, Vector3.zero, coinPrefab.transform.rotation, transform);
             coinPool.Add(createdCoin);
             createdCoin.SetActive(false);
         }
