@@ -8,9 +8,9 @@ public class CoinPooling : MonoBehaviour
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private List<GameObject> coinPool = new List<GameObject>();
     public float counter = 0;
-    public float maxCoin;
+    public int maxCoin;
     public int index = 0;
-    [SerializeField]  private float coinDieTime = 1.5f;
+    [SerializeField]  private float coinDieTime = 0.025f;
     void Start()
     {
         fullingList();
@@ -20,6 +20,7 @@ public class CoinPooling : MonoBehaviour
 
     private void spawnCoin(Vector3 coinPos)
     {
+        coinPool[index].transform.DOKill(true);
         coinPool[index].GetComponent<Rigidbody>().velocity = Vector3.zero;
         coinPool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         coinPool[index].transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -29,6 +30,10 @@ public class CoinPooling : MonoBehaviour
         coinPool[index].GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-0.15f, 0.15f), -0.25f, -0.1f), ForceMode.Impulse);
         counter++;
         index++;
+        if (index >= coinPool.Count)
+        {
+            index = 0;
+        }
         checkCounter();
         EventManager.OnGainMoney.Invoke();
     }
@@ -37,12 +42,11 @@ public class CoinPooling : MonoBehaviour
     {
         if (counter == maxCoin)
         {
-            index = 0;
             counter = 0;
             int i = 0;
             float tempTime = 0f;
-            while(i < maxCoin)
-            {
+            while(i < (maxCoin-4))
+            { 
                 coinPool[i].transform.DOScale(Vector3.zero, tempTime);
                 i++;
                 tempTime += coinDieTime;
