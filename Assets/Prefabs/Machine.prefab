@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 6632615853092361249}
   - component: {fileID: 8515299779272413158}
   - component: {fileID: 1599453520436602479}
+  - component: {fileID: 5162521012636594548}
   m_Layer: 0
   m_Name: Fan
   m_TagString: Untagged
@@ -249,6 +250,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5162521012636594548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871691483904358134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92af4643ef0a0974bbefcdc3cb2bb1e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 150
 --- !u!1 &3871782985304662267
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,6 +483,17 @@ MonoBehaviour:
   moneyAmount: 1
   pipeSpeed: 1
   pipeSpeedIncreaseAmount: 0.2
+  pipeSize: 1
+  pipeList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  animList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &8368416262014517396
 GameObject:
   m_ObjectHideFlags: 0

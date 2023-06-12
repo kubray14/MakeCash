@@ -13,6 +13,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private float incomeCost;
     [SerializeField] private Button pipeButton;
     [SerializeField] private float pipeCost;
+    [SerializeField] private Button mergeButton;
     private PlayerController playerController;
 
     [SerializeField] private Text money;
@@ -40,15 +41,20 @@ public class UIController : MonoBehaviour
             playerController.DecreaseMoney(incomeCost);
             incomeCost += 3;
             incomeCost_Text.text = incomeCost.ToString();
-            EventManager.OnSpeedUpgrade.Invoke();
+            
         });
 
         pipeButton.onClick.AddListener(() =>
         {
+            EventManager.OnAddPipe.Invoke();
             playerController.DecreaseMoney(pipeCost);
             pipeCost += 3;
             pipeCost_Text.text = pipeCost.ToString();
-            EventManager.OnSpeedUpgrade.Invoke();
+        });
+
+        mergeButton.onClick.AddListener(() =>
+        {
+            EventManager.OnPipeMerge.Invoke();
         });
 
         EventManager.OnGainMoneyUI.AddListener(() =>
@@ -100,5 +106,11 @@ public class UIController : MonoBehaviour
         {
             pipeButton.gameObject.SetActive(true);
         }
+    }
+
+    public void closePipeButton()
+    {
+        pipeButton.gameObject.SetActive(false);
+        mergeButton.gameObject.SetActive(true);
     }
 }
