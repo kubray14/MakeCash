@@ -6,7 +6,12 @@ public class FanSpin : MonoBehaviour
 {
 
     [SerializeField] private float rotationSpeed = 10f;
-    private readonly bool CanSpin;
+    private bool CanSpin;
+
+    private void Start()
+    {
+        EventManager.onSpinChange.AddListener(spinChange);
+    }
 
     private void Update()
     {
@@ -14,5 +19,10 @@ public class FanSpin : MonoBehaviour
         {
             transform.Rotate(-Vector3.forward, rotationSpeed * Time.deltaTime);
         }
+    }
+
+    private void spinChange(bool stat)
+    {
+        CanSpin = stat;
     }
 }

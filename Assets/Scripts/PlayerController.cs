@@ -7,10 +7,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float money = 0;
     [SerializeField] private float moneyAmount = 1f;
     [SerializeField] private float pipeSpeed = 1.0f;
+    [SerializeField] private float speedIncreaseValue = 0.15f;
     [SerializeField] private float pipeSpeedIncreaseAmount = 0.2f;
-    [SerializeField] private int pipeSize = 1;
+    [SerializeField] private float moneyIncrease = 1f; //her butona bastýðýnda paranýn deðerinin artmasý
+    [SerializeField] public int pipeSize = 1;
     [SerializeField] private List<GameObject> pipeList;
-    [SerializeField] private List<Animator> animList;
+    [SerializeField] public List<Animator> animList;
 
     private void Start()
     {
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.touchCount > 0)
         {
+            EventManager.onSpinChange.Invoke(true);
             Touch theTouch = Input.GetTouch(0);
             if (theTouch.phase == TouchPhase.Stationary ||theTouch.phase == TouchPhase.Began)
             {
@@ -32,6 +35,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (theTouch.phase ==  TouchPhase.Ended)
             {
+                EventManager.onSpinChange.Invoke(false);
                 for (int i = 0; i < pipeSize; i++)
                 {
                     animList[i].SetBool("coinMove", false);
@@ -66,11 +70,21 @@ public class PlayerController : MonoBehaviour
         if (pipeSize < 4)
         {
             pipeList[pipeSize].SetActive(true);
+            //event pipe buton false merge true
             pipeSize++;
         }
-        else
+    }
+
+    public void moneyAmountIncrease()
+    {
+        moneyAmount += moneyIncrease;
+    }
+
+    public void animSpeedIncrease()
+    {
+        foreach (Animator anim in animList)
         {
-           // close pipe button and open merge button 
+            anim.speed += speedIncreaseValue; 
         }
     }
 }

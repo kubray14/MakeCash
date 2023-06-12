@@ -20,7 +20,9 @@ public class CoinPooling : MonoBehaviour
 
     private void spawnCoin(Vector3 coinPos)
     {
-       
+        coinPool[index].GetComponent<Rigidbody>().velocity = Vector3.zero;
+        coinPool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        coinPool[index].transform.rotation = Quaternion.Euler(0, 0, 0);
         coinPool[index].transform.localScale = new Vector3(0.15f, 0.15f, 0.031f);
         coinPool[index].transform.position = coinPos - new Vector3(0, 0.25f, 0);
         coinPool[index].SetActive(true);
@@ -38,7 +40,7 @@ public class CoinPooling : MonoBehaviour
             index = 0;
             counter = 0;
             int i = 0;
-            float tempTime = 1f;
+            float tempTime = 0f;
             while(i < maxCoin)
             {
                 coinPool[i].transform.DOScale(Vector3.zero, tempTime);

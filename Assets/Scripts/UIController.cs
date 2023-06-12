@@ -33,6 +33,7 @@ public class UIController : MonoBehaviour
             playerController.DecreaseMoney(speedCost);
             speedCost += 3;
             speedCost_Text.text = speedCost.ToString();
+            playerController.animSpeedIncrease();
             EventManager.OnSpeedUpgrade.Invoke();
         });
 
@@ -41,7 +42,7 @@ public class UIController : MonoBehaviour
             playerController.DecreaseMoney(incomeCost);
             incomeCost += 3;
             incomeCost_Text.text = incomeCost.ToString();
-            
+            playerController.moneyAmountIncrease();
         });
 
         pipeButton.onClick.AddListener(() =>
