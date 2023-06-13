@@ -6,7 +6,8 @@ public class FanSpin : MonoBehaviour
 {
 
     [SerializeField] private float rotationSpeed = 10f;
-    private bool CanSpin;
+    [SerializeField] private float minRotationSpeed;
+    [SerializeField] private float maxRotationSpeed;
 
     private void Start()
     {
@@ -15,14 +16,18 @@ public class FanSpin : MonoBehaviour
 
     private void Update()
     {
-        if (CanSpin)
-        {
             transform.Rotate(-Vector3.forward, rotationSpeed * Time.deltaTime);
-        }
     }
 
     private void spinChange(bool stat)
     {
-        CanSpin = stat;
+        if (stat)
+        {
+            rotationSpeed = maxRotationSpeed;
+        }
+        else
+        {
+            rotationSpeed = minRotationSpeed;
+        }
     }
 }

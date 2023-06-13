@@ -5,11 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float money = 0;
-    [SerializeField] private float moneyAmount = 1f;
+    [SerializeField] public float moneyAmount = 1f;
     [SerializeField] private float pipeSpeed = 1.0f;
     [SerializeField] private float speedIncreaseValue = 0.15f;
     [SerializeField] private float pipeSpeedIncreaseAmount = 0.2f;
-    [SerializeField] private float moneyIncrease = 1f; //her butona bastýðýnda paranýn deðerinin artmasý
+    [SerializeField] private float moneyIncrease = 0.1f; //her butona bastýðýnda paranýn deðerinin artmasý
     [SerializeField] public int pipeSize = 1;
     [SerializeField] private List<GameObject> pipeList;
     [SerializeField] public List<Animator> animList;
@@ -70,7 +70,6 @@ public class PlayerController : MonoBehaviour
         if (pipeSize < 4)
         {
             pipeList[pipeSize].SetActive(true);
-            //event pipe buton false merge true
             pipeSize++;
         }
     }

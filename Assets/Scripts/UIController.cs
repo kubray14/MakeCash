@@ -8,18 +8,28 @@ using TMPro;
 public class UIController : MonoBehaviour
 {
     [SerializeField] private Button speedButton;
-    [SerializeField] private float speedCost;
+    [SerializeField] private Image disableSpeed;
+    [SerializeField] private float speedCost = 7;
     [SerializeField] private Button incomeButton;
-    [SerializeField] private float incomeCost;
+    [SerializeField] private Image disableIncome;
+    [SerializeField] private float incomeCost = 7;
     [SerializeField] private Button pipeButton;
-    [SerializeField] private float pipeCost;
+    [SerializeField] private Image disablePipe;
+    [SerializeField] private float pipeCost = 50;
     [SerializeField] private Button mergeButton;
     private PlayerController playerController;
 
     [SerializeField] private Text money;
+    [SerializeField] private float earnedMoney;
+    [SerializeField] private float targetMoney;
+    [SerializeField] private Image presentGreenImage;
     [SerializeField] private TextMeshProUGUI speedCost_Text;
     [SerializeField] private TextMeshProUGUI incomeCost_Text;
     [SerializeField] private TextMeshProUGUI pipeCost_Text;
+
+    private float speed_value = 0.3f;
+    private float pipe_value = 7f;
+    private float income_value = 0.3f;
 
     private void Awake()
     {
@@ -28,11 +38,16 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
+        speedCost_Text.text = "$" + speedCost.ToString();
+        incomeCost_Text.text = "$" + incomeCost.ToString();
+        pipeCost_Text.text = "$" + pipeCost.ToString();
+
         speedButton.onClick.AddListener(() =>
         {
             playerController.DecreaseMoney(speedCost);
-            speedCost += 3;
-            speedCost_Text.text = speedCost.ToString();
+            speedCost += speed_value;
+            speed_value += 0.1f;
+            speedCost_Text.text = "$" + speedCost.ToString();
             playerController.animSpeedIncrease();
             EventManager.OnSpeedUpgrade.Invoke();
         });
@@ -40,8 +55,9 @@ public class UIController : MonoBehaviour
         incomeButton.onClick.AddListener(() =>
         {
             playerController.DecreaseMoney(incomeCost);
-            incomeCost += 3;
-            incomeCost_Text.text = incomeCost.ToString();
+            incomeCost += income_value;
+            income_value += 0.1f;
+            incomeCost_Text.text = "$" + incomeCost.ToString();
             playerController.moneyAmountIncrease();
         });
 
@@ -49,8 +65,9 @@ public class UIController : MonoBehaviour
         {
             EventManager.OnAddPipe.Invoke();
             playerController.DecreaseMoney(pipeCost);
-            pipeCost += 3;
-            pipeCost_Text.text = pipeCost.ToString();
+            pipeCost += pipe_value;
+            pipe_value += (pipe_value / 2);
+            pipeCost_Text.text = "$" + pipeCost.ToString();
         });
 
         mergeButton.onClick.AddListener(() =>
@@ -60,13 +77,19 @@ public class UIController : MonoBehaviour
 
         EventManager.OnGainMoneyUI.AddListener(() =>
         {
-            money.text = ((int)(playerController.GetMoney())).ToString();
+            money.text = playerController.GetMoney().ToString();
+            earnedMoney += playerController.moneyAmount;
+            presentGreenImage.fillAmount = earnedMoney / targetMoney;
+            if (earnedMoney == targetMoney)
+            {
+                // HEDÝYE UI;
+            }
             CheckCostActive();
         });
 
         EventManager.OnSpendMoney.AddListener(() =>
         {
-            money.text = ((int)(playerController.GetMoney())).ToString();
+            money.text = playerController.GetMoney().ToString();
             CheckCostInactive();
         });
 
@@ -77,17 +100,22 @@ public class UIController : MonoBehaviour
     {
         if (playerController.GetMoney() < speedCost)
         {
-            speedButton.gameObject.SetActive(false);
+            disableSpeed.gameObject.SetActive(true);
         }
 
         if (playerController.GetMoney() < incomeCost)
         {
-            incomeButton.gameObject.SetActive(false);
+             disableIncome.gameObject.SetActive(true);
         }
 
         if (playerController.GetMoney() < pipeCost)
         {
-            pipeButton.gameObject.SetActive(false);
+            disablePipe.gameObject.SetActive(true);
+        }
+        if (playerController.pipeSize == 4)
+        {
+            disablePipe.gameObject.SetActive(true);
+            mergeButton.gameObject.SetActive(true);
         }
     }
 
@@ -95,17 +123,22 @@ public class UIController : MonoBehaviour
     {
         if (playerController.GetMoney() >= speedCost)
         {
-            speedButton.gameObject.SetActive(true);
+            disableSpeed.gameObject.SetActive(false);
         }
 
         if (playerController.GetMoney() >= incomeCost)
         {
-            incomeButton.gameObject.SetActive(true);
+            disableIncome.gameObject.SetActive(false);
         }
 
         if (playerController.GetMoney() >= pipeCost)
         {
-            pipeButton.gameObject.SetActive(true);
+            disablePipe.gameObject.SetActive(false);
+        }
+        if (playerController.pipeSize == 4)
+        {
+            disablePipe.gameObject.SetActive(true);
+            mergeButton.gameObject.SetActive(true);
         }
     }
 
