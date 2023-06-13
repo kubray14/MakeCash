@@ -13,6 +13,8 @@ public static class EventManager
     public static UnityEvent OnGainMoney = new UnityEvent();
     public static UnityEvent OnGainMoneyUI = new UnityEvent();
     public static UnityEvent OnSpendMoney = new UnityEvent();
+    public static UnityEvent onHeatAdd = new UnityEvent();
+    public static UnityEvent onCoolMachine = new UnityEvent();
     public static UnityEvent<bool> onSpinChange = new UnityEvent<bool>();
 
     public static UnityEvent<Vector3> OnSpawnCoin = new UnityEvent<Vector3>();

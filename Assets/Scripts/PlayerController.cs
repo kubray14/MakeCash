@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
             Touch theTouch = Input.GetTouch(0);
             if (theTouch.phase == TouchPhase.Stationary ||theTouch.phase == TouchPhase.Began)
             {
+                EventManager.onHeatAdd.Invoke();
                 for (int i = 0; i < pipeSize; i++)
                 {
                     animList[i].SetBool("coinMove", true);
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
             else if (theTouch.phase ==  TouchPhase.Ended)
             {
                 EventManager.onSpinChange.Invoke(false);
+                EventManager.onCoolMachine.Invoke();
                 for (int i = 0; i < pipeSize; i++)
                 {
                     animList[i].SetBool("coinMove", false);

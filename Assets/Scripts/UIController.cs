@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class UIController : MonoBehaviour
 {
@@ -27,9 +28,13 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI incomeCost_Text;
     [SerializeField] private TextMeshProUGUI pipeCost_Text;
 
+    [SerializeField] private Image heat;
+    [SerializeField] private float heatSpeed = 0.1f;
+    [SerializeField] private float colorConst = 0.0125f;
     private float speed_value = 0.3f;
     private float pipe_value = 7f;
     private float income_value = 0.3f;
+    
 
     private void Awake()
     {
@@ -92,10 +97,34 @@ public class UIController : MonoBehaviour
             money.text = playerController.GetMoney().ToString();
             CheckCostInactive();
         });
-
+        EventManager.onCoolMachine.AddListener(coolingMachine);
+        EventManager.onHeatAdd.AddListener(addHeat);
         CheckCostInactive();
     }
 
+    private void addHeat() 
+    {
+        heat.DOPause();
+        heat.fillAmount += heatSpeed * Time.deltaTime;
+        if (heat.color.r < 1)
+        {
+            heat.color = new Color(heat.color.r + colorConst, 1, 0,1);
+        }
+        else
+        {
+            heat.color = new Color(1, heat.color.g - colorConst, 0,1);
+        }
+        if (heat.fillAmount == 0)
+        {
+            heat.DOKill();
+        }
+    }
+
+    private void coolingMachine()
+    {
+        heat.DOColor(new Color(0, 1, 0), 2f);
+        heat.DOFillAmount(0, 2f);
+    }
     private void CheckCostInactive()
     {
         if (playerController.GetMoney() < speedCost)
