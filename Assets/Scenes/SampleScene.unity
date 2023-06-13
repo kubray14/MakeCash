@@ -6018,6 +6018,9 @@ MonoBehaviour:
   speedCost_Text: {fileID: 59503395}
   incomeCost_Text: {fileID: 527369388}
   pipeCost_Text: {fileID: 536141474}
+  speedLevel_Text: {fileID: 1540116245}
+  incomeLevel_Text: {fileID: 164380521}
+  pipeLevel_Text: {fileID: 1475551294}
   heat: {fileID: 2007596637}
   heatSpeed: 0.2
   colorConst: 0.01

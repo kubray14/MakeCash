@@ -28,13 +28,20 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI incomeCost_Text;
     [SerializeField] private TextMeshProUGUI pipeCost_Text;
 
+    [SerializeField] private TextMeshProUGUI speedLevel_Text;
+    [SerializeField] private TextMeshProUGUI incomeLevel_Text;
+    [SerializeField] private TextMeshProUGUI pipeLevel_Text;
+
     [SerializeField] private Image heat;
     [SerializeField] private float heatSpeed = 0.1f;
     [SerializeField] private float colorConst = 0.0125f;
     private float speed_value = 0.3f;
     private float pipe_value = 7f;
     private float income_value = 0.3f;
-    
+
+    private int speedLevel = 1;
+    private int incomeLevel = 1;
+    private int pipeLevel = 1;
 
     private void Awake()
     {
@@ -47,11 +54,17 @@ public class UIController : MonoBehaviour
         incomeCost_Text.text = "$" + incomeCost.ToString();
         pipeCost_Text.text = "$" + pipeCost.ToString();
 
+        speedLevel_Text.text = "Level " + speedLevel.ToString();
+        incomeLevel_Text.text = "Level " + incomeLevel.ToString();
+        pipeLevel_Text.text = "Level " + pipeLevel.ToString();
+
         speedButton.onClick.AddListener(() =>
         {
             playerController.DecreaseMoney(speedCost);
             speedCost += speed_value;
             speed_value += 0.1f;
+            speedLevel++;
+            speedLevel_Text.text = "Level " + speedLevel;
             speedCost_Text.text = "$" + speedCost.ToString();
             playerController.animSpeedIncrease();
             EventManager.OnSpeedUpgrade.Invoke();
@@ -62,6 +75,8 @@ public class UIController : MonoBehaviour
             playerController.DecreaseMoney(incomeCost);
             incomeCost += income_value;
             income_value += 0.1f;
+            incomeLevel++;
+            incomeLevel_Text.text = "Level " + incomeLevel.ToString();
             incomeCost_Text.text = "$" + incomeCost.ToString();
             playerController.moneyAmountIncrease();
         });
@@ -72,6 +87,8 @@ public class UIController : MonoBehaviour
             playerController.DecreaseMoney(pipeCost);
             pipeCost += pipe_value;
             pipe_value += (pipe_value / 2);
+            pipeLevel++;
+            pipeLevel_Text.text = "Level " + pipeLevel;
             pipeCost_Text.text = "$" + pipeCost.ToString();
         });
 
