@@ -13,38 +13,70 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public int pipeSize = 1;
     [SerializeField] private List<GameObject> pipeList;
     [SerializeField] public List<Animator> animList;
+    [SerializeField] private bool isMaxHeat = false;
 
     private void Start()
     {
         EventManager.OnSpeedUpgrade.AddListener(IncreasePipeSpeed);
         EventManager.OnGainMoney.AddListener(IncreaseMoney);
         EventManager.OnAddPipe.AddListener(addPipe);
+        EventManager.OnMachineMaxHeat.AddListener(MaxHeat);
+        EventManager.OnCoolingComplete.AddListener(MinHeat);
     }
     private void Update()
     {
+        if (isMaxHeat)
+        {
+            PipeEnd();
+            return;
+        }
+
         if (Input.touchCount > 0)
         {
             EventManager.onSpinChange.Invoke(true);
             Touch theTouch = Input.GetTouch(0);
-            if (theTouch.phase == TouchPhase.Stationary ||theTouch.phase == TouchPhase.Began)
+            if (theTouch.phase == TouchPhase.Stationary || theTouch.phase == TouchPhase.Began)
             {
                 EventManager.onHeatAdd.Invoke();
-                for (int i = 0; i < pipeSize; i++)
-                {
-                    animList[i].SetBool("coinMove", true);
-                }
+                PipeStart();
             }
-            else if (theTouch.phase ==  TouchPhase.Ended)
+            else if (theTouch.phase == TouchPhase.Ended)
             {
                 EventManager.onSpinChange.Invoke(false);
-                EventManager.onCoolMachine.Invoke();
-                for (int i = 0; i < pipeSize; i++)
-                {
-                    animList[i].SetBool("coinMove", false);
-                }
+                EventManager.onCoolMachine.Invoke(false);
+                PipeEnd();
             }
-        }   
+        }
     }
+
+    private void MaxHeat(bool isHeat)
+    {
+        isMaxHeat = isHeat;
+        EventManager.onCoolMachine.Invoke(isMaxHeat);
+        PipeEnd();
+    }
+
+    private void MinHeat(bool isHeat)
+    {
+        isMaxHeat = isHeat;
+    }
+
+    private void PipeStart()
+    {
+        for (int i = 0; i < pipeSize; i++)
+        {
+            animList[i].SetBool("coinMove", true);
+        }
+    }
+
+    private void PipeEnd()
+    {
+        for (int i = 0; i < pipeSize; i++)
+        {
+            animList[i].SetBool("coinMove", false);
+        }
+    }
+
     private void IncreasePipeSpeed()
     {
         pipeSpeed += pipeSpeedIncreaseAmount;
@@ -85,7 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach (Animator anim in animList)
         {
-            anim.speed += speedIncreaseValue; 
+            anim.speed += speedIncreaseValue;
         }
     }
 }

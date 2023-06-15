@@ -119,28 +119,45 @@ public class UIController : MonoBehaviour
         CheckCostInactive();
     }
 
-    private void addHeat() 
+    private void addHeat()
     {
         heat.DOPause();
         heat.fillAmount += heatSpeed * Time.deltaTime;
         if (heat.color.r < 1)
         {
-            heat.color = new Color(heat.color.r + colorConst, 1, 0,1);
+            heat.color = new Color(heat.color.r + colorConst, 1, 0, 1);
         }
         else
         {
-            heat.color = new Color(1, heat.color.g - colorConst, 0,1);
+            heat.color = new Color(1, heat.color.g - colorConst, 0, 1);
         }
+
         if (heat.fillAmount == 0)
         {
             heat.DOKill();
         }
+
+        if (heat.fillAmount >= 1)
+        {
+            EventManager.OnMachineMaxHeat.Invoke(true);
+        }
     }
 
-    private void coolingMachine()
+    private void coolingMachine(bool isHeat)
     {
-        heat.DOColor(new Color(0, 1, 0), 2f);
-        heat.DOFillAmount(0, 2f);
+        if (isHeat)
+        {
+            heat.DOColor(new Color(0, 1, 0), 2f);
+            heat.DOFillAmount(0, 2f).OnComplete(() =>
+            {
+                EventManager.OnCoolingComplete.Invoke(false);
+            });
+        }
+        else
+        {
+            heat.DOColor(new Color(0, 1, 0), 2f);
+            heat.DOFillAmount(0, 2f);
+        }
     }
     private void CheckCostInactive()
     {
@@ -151,7 +168,7 @@ public class UIController : MonoBehaviour
 
         if (playerController.GetMoney() < incomeCost)
         {
-             disableIncome.gameObject.SetActive(true);
+            disableIncome.gameObject.SetActive(true);
         }
 
         if (playerController.GetMoney() < pipeCost)
