@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public int pipeSize = 1;
     [SerializeField] private List<GameObject> pipeList;
     [SerializeField] public List<Animator> animList;
-    [SerializeField] private bool isMaxHeat = false;
+    [SerializeField] private bool canPlay = true;
 
     private void Start()
     {
@@ -22,10 +23,11 @@ public class PlayerController : MonoBehaviour
         EventManager.OnAddPipe.AddListener(addPipe);
         EventManager.OnMachineMaxHeat.AddListener(MaxHeat);
         EventManager.OnCoolingComplete.AddListener(MinHeat);
+        EventManager.OnPipeMerge.AddListener(PipeMerge);
     }
     private void Update()
     {
-        if (isMaxHeat)
+        if (!canPlay)
         {
             PipeEnd();
             return;
@@ -51,14 +53,14 @@ public class PlayerController : MonoBehaviour
 
     private void MaxHeat(bool isHeat)
     {
-        isMaxHeat = isHeat;
-        EventManager.onCoolMachine.Invoke(isMaxHeat);
+        canPlay = isHeat;
+        EventManager.onCoolMachine.Invoke(canPlay);
         PipeEnd();
     }
 
     private void MinHeat(bool isHeat)
     {
-        isMaxHeat = isHeat;
+        canPlay = isHeat;
     }
 
     private void PipeStart()
@@ -75,6 +77,37 @@ public class PlayerController : MonoBehaviour
         {
             animList[i].SetBool("coinMove", false);
         }
+    }
+
+    private void PipeMerge()
+    {
+        StartCoroutine(PipeMerge_Coroutine());
+    }
+
+    private IEnumerator PipeMerge_Coroutine()
+    {
+        float mergeTime = 1f;
+        canPlay = false;
+        List<Vector3> firsPositions = new List<Vector3>();
+        for (int j = 0; j < pipeList.Count; j++)
+        {
+            firsPositions.Add(pipeList[j].transform.position);
+        }
+        for (int i = 1; i < pipeList.Count; i++)
+        {
+            pipeList[i].transform.DOMove(pipeList[0].transform.position, mergeTime);
+        }
+
+        yield return new WaitForSeconds(mergeTime);
+        for (int i = 1; i < pipeList.Count; i++)
+        {
+            pipeList[i].transform.position = firsPositions[i];
+            pipeList[i].gameObject.SetActive(false);
+        }
+        pipeSize = 1;
+        canPlay = true;
+        EventManager.OnPipeUpgrade.Invoke(); // Pipe Upgrade Eksik !!!!!!!!!!!!!
+        yield break;
     }
 
     private void IncreasePipeSpeed()
