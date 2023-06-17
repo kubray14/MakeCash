@@ -16,6 +16,8 @@ public class CoinSpawner : MonoBehaviour
     private void SpawnCoin()
     {
         EventManager.OnSpawnCoin.Invoke(transform.parent.position);
+        EventManager.OnGainMoney.Invoke(moneyMultiplier * PlayerController.moneyIncrease);
+        EventManager.OnGainMoneyUI.Invoke();
     }
 
     private void DisplayMoneyMultiplier()
@@ -26,5 +28,12 @@ public class CoinSpawner : MonoBehaviour
     public float GetMultiplier()
     {
         return moneyMultiplier;
+    }
+
+    public void Upgrade()
+    {
+        moneyMultiplier *= 4;
+        DisplayMoneyMultiplier();
+        // Color change.
     }
 }

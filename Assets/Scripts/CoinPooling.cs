@@ -35,7 +35,6 @@ public class CoinPooling : MonoBehaviour
             index = 0;
         }
         checkCounter();
-        EventManager.OnGainMoney.Invoke();
     }
 
     private void checkCounter()

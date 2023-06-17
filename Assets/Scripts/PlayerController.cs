@@ -5,16 +5,17 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float money = 0;
-    [SerializeField] public float moneyAmount = 1f;
+    public float money = 0;
     [SerializeField] private float pipeSpeed = 1.0f;
     [SerializeField] private float speedIncreaseValue = 0.15f;
     [SerializeField] private float pipeSpeedIncreaseAmount = 0.2f;
-    [SerializeField] private float moneyIncrease = 0.1f; //her butona bastýðýnda paranýn deðerinin artmasý
+    public static float moneyIncrease = 1f; //her butona bastýðýnda paranýn deðerinin artmasý
     [SerializeField] public int pipeSize = 1;
-    [SerializeField] private List<GameObject> pipeList;
+    [SerializeField] private List<CoinSpawner> pipeList;
     [SerializeField] public List<Animator> animList;
     [SerializeField] private bool canPlay = true;
+    [SerializeField] private int mergingPipeIndex = 0;
+    public bool isTouch = false;
 
     private void Start()
     {
@@ -32,23 +33,14 @@ public class PlayerController : MonoBehaviour
             PipeEnd();
             return;
         }
-
-        if (Input.touchCount > 0)
+        if (!isTouch)
         {
-            EventManager.onSpinChange.Invoke(true);
-            Touch theTouch = Input.GetTouch(0);
-            if (theTouch.phase == TouchPhase.Stationary || theTouch.phase == TouchPhase.Began)
-            {
-                EventManager.onHeatAdd.Invoke();
-                PipeStart();
-            }
-            else if (theTouch.phase == TouchPhase.Ended)
-            {
-                EventManager.onSpinChange.Invoke(false);
-                EventManager.onCoolMachine.Invoke(false);
-                PipeEnd();
-            }
+            return;
         }
+
+        EventManager.onSpinChange.Invoke(true);
+        EventManager.onHeatAdd.Invoke();
+        PipeStart();
     }
 
     private void MaxHeat(bool isHeat)
@@ -71,7 +63,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void PipeEnd()
+    public void PipeEnd()
     {
         for (int i = 0; i < pipeSize; i++)
         {
@@ -86,27 +78,39 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PipeMerge_Coroutine()
     {
-        float mergeTime = 1f;
+        float mergeTime = .75f;
         canPlay = false;
         List<Vector3> firsPositions = new List<Vector3>();
-        for (int j = 0; j < pipeList.Count; j++)
+
+        for (int i = 0; i < pipeList.Count; i++)
         {
-            firsPositions.Add(pipeList[j].transform.position);
+            firsPositions.Add(pipeList[i].transform.parent.position);
         }
-        for (int i = 1; i < pipeList.Count; i++)
+
+        for (int i = mergingPipeIndex; i < pipeList.Count; i++) // merge movement.
         {
-            pipeList[i].transform.DOMove(pipeList[0].transform.position, mergeTime);
+            pipeList[i].transform.parent.DOMove(pipeList[mergingPipeIndex].transform.parent.position, mergeTime);
         }
 
         yield return new WaitForSeconds(mergeTime);
-        for (int i = 1; i < pipeList.Count; i++)
+        for (int i = mergingPipeIndex; i < pipeList.Count; i++)
         {
-            pipeList[i].transform.position = firsPositions[i];
-            pipeList[i].gameObject.SetActive(false);
+            if (i != mergingPipeIndex)
+            {
+
+                pipeList[i].transform.parent.position = firsPositions[i];
+                pipeList[i].transform.parent.gameObject.SetActive(false);
+
+            }
         }
-        pipeSize = 1;
         canPlay = true;
-        EventManager.OnPipeUpgrade.Invoke(); // Pipe Upgrade Eksik !!!!!!!!!!!!!
+        pipeList[mergingPipeIndex].Upgrade();
+        pipeSize = mergingPipeIndex + 1;
+        mergingPipeIndex++;
+        if (mergingPipeIndex > 3)
+        {
+            mergingPipeIndex = 0;
+        }
         yield break;
     }
 
@@ -115,10 +119,9 @@ public class PlayerController : MonoBehaviour
         pipeSpeed += pipeSpeedIncreaseAmount;
     }
 
-    private void IncreaseMoney()
+    private void IncreaseMoney(float moneyAmount)
     {
         money += moneyAmount;
-        EventManager.OnGainMoneyUI.Invoke();
     }
 
     public void DecreaseMoney(float cost)
@@ -136,14 +139,15 @@ public class PlayerController : MonoBehaviour
     {
         if (pipeSize < 4)
         {
-            pipeList[pipeSize].SetActive(true);
+            pipeList[pipeSize].transform.parent.gameObject.SetActive(true);
             pipeSize++;
         }
     }
 
     public void moneyAmountIncrease()
     {
-        moneyAmount += moneyIncrease;
+        float increaseAmount = 0.1f;
+        moneyIncrease += increaseAmount;
     }
 
     public void animSpeedIncrease()

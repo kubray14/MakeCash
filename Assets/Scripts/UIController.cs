@@ -90,17 +90,23 @@ public class UIController : MonoBehaviour
             pipeLevel++;
             pipeLevel_Text.text = "Level " + pipeLevel;
             pipeCost_Text.text = "$" + pipeCost.ToString();
+            if (playerController.pipeSize == 4)
+            {
+                disablePipe.gameObject.SetActive(true);
+                mergeButton.gameObject.SetActive(true);
+            }
         });
 
         mergeButton.onClick.AddListener(() =>
         {
             EventManager.OnPipeMerge.Invoke();
+            mergeButton.gameObject.SetActive(false);
         });
 
         EventManager.OnGainMoneyUI.AddListener(() =>
         {
-            money.text = playerController.GetMoney().ToString();
-            earnedMoney += playerController.moneyAmount;
+            money.text = playerController.GetMoney().ToString("0.0");
+            earnedMoney += playerController.money;
             presentGreenImage.fillAmount = earnedMoney / targetMoney;
             if (earnedMoney == targetMoney)
             {
@@ -125,11 +131,11 @@ public class UIController : MonoBehaviour
         heat.fillAmount += heatSpeed * Time.deltaTime;
         if (heat.color.r < 1)
         {
-            heat.color = new Color(heat.color.r + colorConst, 1, 0, 1);
+            heat.color = new Color(heat.color.r + colorConst * Time.deltaTime, 1, 0, 1);
         }
         else
         {
-            heat.color = new Color(1, heat.color.g - colorConst, 0, 1);
+            heat.color = new Color(1, heat.color.g - colorConst * Time.deltaTime, 0, 1);
         }
 
         if (heat.fillAmount == 0)
@@ -139,18 +145,18 @@ public class UIController : MonoBehaviour
 
         if (heat.fillAmount >= 1)
         {
-            EventManager.OnMachineMaxHeat.Invoke(true);
+            EventManager.OnMachineMaxHeat.Invoke(false);
         }
     }
 
     private void coolingMachine(bool isHeat)
     {
-        if (isHeat)
+        if (!isHeat)
         {
             heat.DOColor(new Color(0, 1, 0), 2f);
             heat.DOFillAmount(0, 2f).OnComplete(() =>
             {
-                EventManager.OnCoolingComplete.Invoke(false);
+                EventManager.OnCoolingComplete.Invoke(true);
             });
         }
         else
@@ -164,21 +170,19 @@ public class UIController : MonoBehaviour
         if (playerController.GetMoney() < speedCost)
         {
             disableSpeed.gameObject.SetActive(true);
+            speedButton.interactable = false;
         }
 
         if (playerController.GetMoney() < incomeCost)
         {
             disableIncome.gameObject.SetActive(true);
+            incomeButton.interactable = false;
         }
 
         if (playerController.GetMoney() < pipeCost)
         {
             disablePipe.gameObject.SetActive(true);
-        }
-        if (playerController.pipeSize == 4)
-        {
-            disablePipe.gameObject.SetActive(true);
-            mergeButton.gameObject.SetActive(true);
+            pipeButton.interactable = false;
         }
     }
 
@@ -187,22 +191,25 @@ public class UIController : MonoBehaviour
         if (playerController.GetMoney() >= speedCost)
         {
             disableSpeed.gameObject.SetActive(false);
+            speedButton.interactable = true;
         }
 
         if (playerController.GetMoney() >= incomeCost)
         {
             disableIncome.gameObject.SetActive(false);
+            incomeButton.interactable = true;
         }
 
         if (playerController.GetMoney() >= pipeCost)
         {
             disablePipe.gameObject.SetActive(false);
+            pipeButton.interactable = true;
         }
-        if (playerController.pipeSize == 4)
-        {
-            disablePipe.gameObject.SetActive(true);
-            mergeButton.gameObject.SetActive(true);
-        }
+        //if (playerController.pipeSize == 4)
+        //{
+        //    disablePipe.gameObject.SetActive(true);
+        //    //mergeButton.gameObject.SetActive(true);
+        //}
     }
 
     public void closePipeButton()
