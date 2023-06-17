@@ -8,6 +8,7 @@ public static class EventManager
     public static UnityEvent OnMachineUpgrade = new UnityEvent();
     public static UnityEvent OnSpeedUpgrade = new UnityEvent();
     public static UnityEvent OnCoinValueUpgrade = new UnityEvent();
+    public static UnityEvent OnCoinTypeUpgrade = new UnityEvent();
     public static UnityEvent OnAddPipe = new UnityEvent();
     public static UnityEvent OnPipeMerge = new UnityEvent();
     public static UnityEvent<float> OnGainMoney = new UnityEvent<float>();

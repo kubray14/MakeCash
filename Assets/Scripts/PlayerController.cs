@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool canPlay = true;
     [SerializeField] private int mergingPipeIndex = 0;
     [SerializeField] private ParticleSystem upgradeParticle;
+    [SerializeField] private Mesh greenPipeMesh;
     public bool isTouch = false;
 
     private void Start()
@@ -102,7 +103,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         canPlay = true;
-        pipeList[mergingPipeIndex].Upgrade();
+        pipeList[mergingPipeIndex].Upgrade(greenPipeMesh);
         for (int i = mergingPipeIndex + 1; i < pipeList.Count; i++)
         {
             pipeList[i].ResetUpgrade();
@@ -118,7 +119,7 @@ public class PlayerController : MonoBehaviour
 
     private void IncreasePipeSpeed()
     {
-        upgradeParticle.Play(); 
+        upgradeParticle.Play();
         foreach (Animator anim in animList)
         {
             anim.speed += speedIncreaseValue;

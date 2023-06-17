@@ -79,6 +79,10 @@ public class UIController : MonoBehaviour
             incomeLevel_Text.text = "Level " + incomeLevel.ToString("0.0");
             incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
             EventManager.OnCoinValueUpgrade.Invoke();
+            if (incomeLevel % 5 == 0)
+            {
+                EventManager.OnCoinTypeUpgrade.Invoke();
+            }
         });
 
         pipeButton.onClick.AddListener(() =>

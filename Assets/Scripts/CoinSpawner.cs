@@ -47,10 +47,11 @@ public class CoinSpawner : MonoBehaviour
         return moneyMultiplier;
     }
 
-    public void Upgrade()
+    public void Upgrade(Mesh newMesh)
     {
         moneyMultiplier *= 4;
         DisplayMoneyMultiplier();
+        transform.parent.GetComponent<MeshFilter>().mesh = newMesh;
         // Color change.
     }
 
