@@ -65,7 +65,7 @@ public class UIController : MonoBehaviour
             speed_value += 0.1f;
             speedLevel++;
             speedLevel_Text.text = "Level " + speedLevel;
-            speedCost_Text.text = "$" + speedCost.ToString();
+            speedCost_Text.text = "$" + speedCost.ToString("0.0");
             playerController.animSpeedIncrease();
             EventManager.OnSpeedUpgrade.Invoke();
         });
@@ -76,8 +76,8 @@ public class UIController : MonoBehaviour
             incomeCost += income_value;
             income_value += 0.1f;
             incomeLevel++;
-            incomeLevel_Text.text = "Level " + incomeLevel.ToString();
-            incomeCost_Text.text = "$" + incomeCost.ToString();
+            incomeLevel_Text.text = "Level " + incomeLevel.ToString("0.0");
+            incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
             playerController.moneyAmountIncrease();
         });
 
@@ -89,7 +89,7 @@ public class UIController : MonoBehaviour
             pipe_value += (pipe_value / 2);
             pipeLevel++;
             pipeLevel_Text.text = "Level " + pipeLevel;
-            pipeCost_Text.text = "$" + pipeCost.ToString();
+            pipeCost_Text.text = "$" + pipeCost.ToString("0.0");
             if (playerController.pipeSize == 4)
             {
                 disablePipe.gameObject.SetActive(true);
@@ -117,7 +117,7 @@ public class UIController : MonoBehaviour
 
         EventManager.OnSpendMoney.AddListener(() =>
         {
-            money.text = playerController.GetMoney().ToString();
+            money.text = playerController.GetMoney().ToString("0.0");
             CheckCostInactive();
         });
         EventManager.onCoolMachine.AddListener(coolingMachine);
@@ -202,14 +202,18 @@ public class UIController : MonoBehaviour
 
         if (playerController.GetMoney() >= pipeCost)
         {
-            disablePipe.gameObject.SetActive(false);
-            pipeButton.interactable = true;
+            if (playerController.pipeSize == 4)
+            {
+                disablePipe.gameObject.SetActive(true);
+                pipeButton.interactable = false;
+            }
+            else
+            {
+                disablePipe.gameObject.SetActive(false);
+                pipeButton.interactable = true;
+            }
         }
-        //if (playerController.pipeSize == 4)
-        //{
-        //    disablePipe.gameObject.SetActive(true);
-        //    //mergeButton.gameObject.SetActive(true);
-        //}
+
     }
 
     public void closePipeButton()
