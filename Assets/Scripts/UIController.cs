@@ -21,6 +21,7 @@ public class UIController : MonoBehaviour
     private PlayerController playerController;
 
     [SerializeField] private Text money;
+    [SerializeField] private Animator moneyAnimator;
     [SerializeField] private float earnedMoney;
     [SerializeField] private float targetMoney;
     [SerializeField] private Image presentGreenImage;
@@ -50,13 +51,13 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        speedCost_Text.text = "$" + speedCost.ToString();
-        incomeCost_Text.text = "$" + incomeCost.ToString();
-        pipeCost_Text.text = "$" + pipeCost.ToString();
+        speedCost_Text.text = "$" + speedCost.ToString("0.0");
+        incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
+        pipeCost_Text.text = "$" + pipeCost.ToString("0.0");
 
-        speedLevel_Text.text = "Level " + speedLevel.ToString();
-        incomeLevel_Text.text = "Level " + incomeLevel.ToString();
-        pipeLevel_Text.text = "Level " + pipeLevel.ToString();
+        speedLevel_Text.text = "Level " + speedLevel.ToString("0.0");
+        incomeLevel_Text.text = "Level " + incomeLevel.ToString("0.0");
+        pipeLevel_Text.text = "Level " + pipeLevel.ToString("0.0");
 
         speedButton.onClick.AddListener(() =>
         {
@@ -66,7 +67,6 @@ public class UIController : MonoBehaviour
             speedLevel++;
             speedLevel_Text.text = "Level " + speedLevel;
             speedCost_Text.text = "$" + speedCost.ToString("0.0");
-            playerController.animSpeedIncrease();
             EventManager.OnSpeedUpgrade.Invoke();
         });
 
@@ -78,7 +78,7 @@ public class UIController : MonoBehaviour
             incomeLevel++;
             incomeLevel_Text.text = "Level " + incomeLevel.ToString("0.0");
             incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
-            playerController.moneyAmountIncrease();
+            EventManager.OnCoinValueUpgrade.Invoke();
         });
 
         pipeButton.onClick.AddListener(() =>
@@ -122,7 +122,9 @@ public class UIController : MonoBehaviour
         });
         EventManager.onCoolMachine.AddListener(coolingMachine);
         EventManager.onHeatAdd.AddListener(addHeat);
+        EventManager.OnGainMoney.AddListener(MoneyUIPopup);
         CheckCostInactive();
+
     }
 
     private void addHeat()
@@ -206,6 +208,7 @@ public class UIController : MonoBehaviour
             {
                 disablePipe.gameObject.SetActive(true);
                 pipeButton.interactable = false;
+                mergeButton.gameObject.SetActive(true);
             }
             else
             {
@@ -220,5 +223,10 @@ public class UIController : MonoBehaviour
     {
         pipeButton.gameObject.SetActive(false);
         mergeButton.gameObject.SetActive(true);
+    }
+
+    private void MoneyUIPopup(float x)
+    {
+        moneyAnimator.SetTrigger("Popup");
     }
 }
