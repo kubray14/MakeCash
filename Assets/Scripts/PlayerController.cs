@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject card2;
     public bool isTouch = false;
 
+
     private void Start()
     {
         EventManager.OnSpeedUpgrade.AddListener(IncreasePipeSpeed);
@@ -42,11 +43,14 @@ public class PlayerController : MonoBehaviour
             PipeEnd();
             return;
         }
+        if (!(Input.touchCount != 0))
+        {
+            return;
+        }
         if (!isTouch)
         {
             return;
         }
-
         EventManager.onSpinChange.Invoke(true);
         EventManager.onHeatAdd.Invoke();
         PipeStart();

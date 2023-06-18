@@ -32,6 +32,4 @@ public class ButtonScript : MonoBehaviour, IPointerDownHandler
     {
         controller.isTouch = true;
     }
-
-
 }
