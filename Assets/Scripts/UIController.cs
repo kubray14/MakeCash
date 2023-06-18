@@ -28,7 +28,6 @@ public class UIController : MonoBehaviour
 
     [SerializeField] private Text money;
     [SerializeField] private Animator moneyAnimator;
-    [SerializeField] private float earnedMoney;
     [SerializeField] private float targetMoney;
     [SerializeField] private Image presentGreenImage;
     [SerializeField] private TextMeshProUGUI speedCost_Text;
@@ -61,9 +60,9 @@ public class UIController : MonoBehaviour
         incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
         pipeCost_Text.text = "$" + pipeCost.ToString("0.0");
 
-        speedLevel_Text.text = "Level " + speedLevel.ToString("0.0");
-        incomeLevel_Text.text = "Level " + incomeLevel.ToString("0.0");
-        pipeLevel_Text.text = "Level " + pipeLevel.ToString("0.0");
+        speedLevel_Text.text = "Level " + speedLevel.ToString();
+        incomeLevel_Text.text = "Level " + incomeLevel.ToString();
+        pipeLevel_Text.text = "Level " + pipeLevel.ToString();
 
         speedButton.onClick.AddListener(() =>
         {
@@ -71,7 +70,7 @@ public class UIController : MonoBehaviour
             speedCost += speed_value;
             speed_value += 0.1f;
             speedLevel++;
-            speedLevel_Text.text = "Level " + speedLevel;
+            speedLevel_Text.text = "Level " + speedLevel.ToString();
             speedCost_Text.text = "$" + speedCost.ToString("0.0");
             EventManager.OnSpeedUpgrade.Invoke();
             EventManager.OnNewCardProcess.Invoke();
@@ -83,7 +82,7 @@ public class UIController : MonoBehaviour
             incomeCost += income_value;
             income_value += 0.1f;
             incomeLevel++;
-            incomeLevel_Text.text = "Level " + incomeLevel.ToString("0.0");
+            incomeLevel_Text.text = "Level " + incomeLevel.ToString();
             incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
             EventManager.OnCoinValueUpgrade.Invoke();
             if (incomeLevel % 5 == 0)
@@ -100,7 +99,7 @@ public class UIController : MonoBehaviour
             pipeCost += pipe_value;
             pipe_value += (pipe_value / 2);
             pipeLevel++;
-            pipeLevel_Text.text = "Level " + pipeLevel;
+            pipeLevel_Text.text = "Level " + pipeLevel.ToString();
             pipeCost_Text.text = "$" + pipeCost.ToString("0.0");
             if (playerController.pipeSize == 4)
             {
@@ -125,9 +124,8 @@ public class UIController : MonoBehaviour
         EventManager.OnGainMoneyUI.AddListener(() =>
         {
             money.text = playerController.GetMoney().ToString("0.0");
-            earnedMoney += playerController.money;
-            presentGreenImage.fillAmount = earnedMoney / targetMoney;
-            if (earnedMoney == targetMoney)
+            presentGreenImage.fillAmount = playerController.money / targetMoney;
+            if (presentGreenImage.fillAmount == 1)
             {
                 // HEDÝYE UI;
             }

@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private ParticleSystem upgradeParticle;
     [SerializeField] private ParticleSystem cardChangeParticle;
     [SerializeField] private Mesh greenPipeMesh;
+     [SerializeField] private Mesh greenShortPipeMesh;
+    [SerializeField] private Mesh yellowShortPipeMesh;
     [SerializeField] private GameObject card1;
     [SerializeField] private GameObject card2;
     public bool isTouch = false;
@@ -109,7 +111,16 @@ public class PlayerController : MonoBehaviour
             }
         }
         canPlay = true;
-        pipeList[mergingPipeIndex].Upgrade(greenPipeMesh);
+
+        if (mergingPipeIndex == 0)
+        {
+            pipeList[mergingPipeIndex].Upgrade(greenPipeMesh);
+        }
+        else
+        {
+            pipeList[mergingPipeIndex].Upgrade(greenShortPipeMesh);
+        }
+
         for (int i = mergingPipeIndex + 1; i < pipeList.Count; i++)
         {
             pipeList[i].ResetUpgrade();
@@ -152,6 +163,7 @@ public class PlayerController : MonoBehaviour
     {
         if (pipeSize < 4)
         {
+            pipeList[pipeSize].transform.parent.gameObject.GetComponent<MeshFilter>().mesh = yellowShortPipeMesh;
             pipeList[pipeSize].transform.parent.gameObject.SetActive(true);
             pipeList[pipeSize].transform.parent.localScale = Vector3.zero;
             pipeList[pipeSize].transform.parent.DOScale(Vector3.one, 1f).SetEase(Ease.OutBounce);
