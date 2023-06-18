@@ -12,11 +12,14 @@ public class FanSpin : MonoBehaviour
     private static float speedMultiplier = 1f;
     private Vector3 turnDirection = -Vector3.forward;
 
+    private void Awake()
+    {
+        speedMultiplier = 1f;
+    }
     private void Start()
     {
         EventManager.onSpinChange.AddListener(spinChange);
         EventManager.OnSpeedUpgrade.AddListener(IncreaseSpeedMultiplier);
-        speedMultiplier = 1f;
     }
 
     private void Update()

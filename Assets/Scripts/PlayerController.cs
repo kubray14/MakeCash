@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
         EventManager.OnPipeMerge.AddListener(PipeMerge);
         EventManager.OnCoinValueUpgrade.AddListener(moneyAmountIncrease);
         EventManager.OnNewCardUpgrade.AddListener(UpgradeCard);
+
+        card2.gameObject.SetActive(false);
     }
     private void Update()
     {
