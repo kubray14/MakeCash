@@ -14,7 +14,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool canPlay = true;
     [SerializeField] private int mergingPipeIndex = 0;
     [SerializeField] private ParticleSystem upgradeParticle;
+    [SerializeField] private ParticleSystem cardChangeParticle;
     [SerializeField] private Mesh greenPipeMesh;
+    [SerializeField] private GameObject card1;
+    [SerializeField] private GameObject card2;
     public bool isTouch = false;
 
     private void Start()
@@ -26,6 +29,7 @@ public class PlayerController : MonoBehaviour
         EventManager.OnCoolingComplete.AddListener(MinHeat);
         EventManager.OnPipeMerge.AddListener(PipeMerge);
         EventManager.OnCoinValueUpgrade.AddListener(moneyAmountIncrease);
+        EventManager.OnNewCardUpgrade.AddListener(UpgradeCard);
     }
     private void Update()
     {
@@ -164,5 +168,19 @@ public class PlayerController : MonoBehaviour
     public float GetAnimSpeed()
     {
         return animList[0].speed;
+    }
+
+    private void UpgradeCard()
+    {
+        canPlay = false;
+        cardChangeParticle.Play();
+        card1.SetActive(false);
+        card2.SetActive(true);
+        card2.transform.localScale = Vector3.one / 2;
+        float tweenTime = 0.4f;
+        card2.transform.DOScale(Vector3.one, tweenTime).SetEase(Ease.OutBounce).OnComplete(() =>
+        {
+            canPlay = true;
+        });
     }
 }

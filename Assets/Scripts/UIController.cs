@@ -18,7 +18,13 @@ public class UIController : MonoBehaviour
     [SerializeField] private Image disablePipe;
     [SerializeField] private float pipeCost = 50;
     [SerializeField] private Button mergeButton;
+    [SerializeField] private Image newCardImage;
+    [SerializeField] private GameObject newCardProcessUI;
+    [SerializeField] private GameObject newCardUpgradeUI;
+    [SerializeField] private Button newCardButton;
+    private bool canUpgradeCard = true;
     private PlayerController playerController;
+
 
     [SerializeField] private Text money;
     [SerializeField] private Animator moneyAnimator;
@@ -68,6 +74,7 @@ public class UIController : MonoBehaviour
             speedLevel_Text.text = "Level " + speedLevel;
             speedCost_Text.text = "$" + speedCost.ToString("0.0");
             EventManager.OnSpeedUpgrade.Invoke();
+            EventManager.OnNewCardProcess.Invoke();
         });
 
         incomeButton.onClick.AddListener(() =>
@@ -83,6 +90,7 @@ public class UIController : MonoBehaviour
             {
                 EventManager.OnCoinTypeUpgrade.Invoke();
             }
+            EventManager.OnNewCardProcess.Invoke();
         });
 
         pipeButton.onClick.AddListener(() =>
@@ -107,6 +115,13 @@ public class UIController : MonoBehaviour
             mergeButton.gameObject.SetActive(false);
         });
 
+        newCardButton.onClick.AddListener(() =>
+        {
+            EventManager.OnNewCardUpgrade.Invoke();
+            newCardUpgradeUI.SetActive(false);
+
+        });
+
         EventManager.OnGainMoneyUI.AddListener(() =>
         {
             money.text = playerController.GetMoney().ToString("0.0");
@@ -127,8 +142,22 @@ public class UIController : MonoBehaviour
         EventManager.onCoolMachine.AddListener(coolingMachine);
         EventManager.onHeatAdd.AddListener(addHeat);
         EventManager.OnGainMoney.AddListener(MoneyUIPopup);
+        EventManager.OnNewCardProcess.AddListener(NewCardProcess);
         CheckCostInactive();
+    }
 
+    private void NewCardProcess()
+    {
+        if (canUpgradeCard)
+        {
+            newCardImage.fillAmount += 0.1f;
+            if (newCardImage.fillAmount >= 1)
+            {
+                newCardProcessUI.SetActive(false);
+                newCardUpgradeUI.SetActive(true);
+                canUpgradeCard = false;
+            }
+        }
     }
 
     private void addHeat()

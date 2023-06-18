@@ -5,9 +5,10 @@ using UnityEngine;
 public class FanSpin : MonoBehaviour
 {
 
-    [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private float minRotationSpeed;
-    [SerializeField] private float maxRotationSpeed;
+    [SerializeField] private float rotationSpeed = 50f;
+    [SerializeField] private float minRotationSpeed = 50f;
+    [SerializeField] private float maxRotationSpeed = 150f;
+    private Vector3 turnDirection = -Vector3.forward;
 
     private void Start()
     {
@@ -16,7 +17,7 @@ public class FanSpin : MonoBehaviour
 
     private void Update()
     {
-            transform.Rotate(-Vector3.forward, rotationSpeed * Time.deltaTime);
+        transform.Rotate(turnDirection, rotationSpeed * Time.deltaTime, Space.World);
     }
 
     private void spinChange(bool stat)

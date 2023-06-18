@@ -19,6 +19,8 @@ public static class EventManager
     public static UnityEvent<bool> onCoolMachine = new UnityEvent<bool>();
     public static UnityEvent<bool> OnCoolingComplete = new UnityEvent<bool>();
     public static UnityEvent<bool> onSpinChange = new UnityEvent<bool>();
+    public static UnityEvent OnNewCardProcess = new UnityEvent();
+    public static UnityEvent OnNewCardUpgrade = new UnityEvent();
 
     public static UnityEvent<Vector3> OnSpawnCoin = new UnityEvent<Vector3>();
 }
