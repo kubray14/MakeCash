@@ -176,6 +176,11 @@ public class UIController : MonoBehaviour
             heat.DOKill();
         }
 
+        if (heat.fillAmount >= 0.5f)
+        {
+            EventManager.onFireAdd.Invoke((heat.fillAmount - 0.5f) * 2, true);
+        }
+
         if (heat.fillAmount >= 1)
         {
             EventManager.OnMachineMaxHeat.Invoke(false);
@@ -186,7 +191,8 @@ public class UIController : MonoBehaviour
     {
         if (!isHeat)
         {
-            heat.DOColor(new Color(0, 1, 0), 2f);
+            heat.DOColor(new Color(0, 1, 0), 2f).OnUpdate(() => { EventManager.onFireAdd.Invoke(heat.fillAmount, false); });
+
             heat.DOFillAmount(0, 2f).OnComplete(() =>
             {
                 EventManager.OnCoolingComplete.Invoke(true);
@@ -195,7 +201,7 @@ public class UIController : MonoBehaviour
         else
         {
             heat.DOColor(new Color(0, 1, 0), 2f);
-            heat.DOFillAmount(0, 2f);
+            heat.DOFillAmount(0, 2f).OnUpdate(() => { EventManager.onFireAdd.Invoke(heat.fillAmount, false); });
         }
     }
     private void CheckCostInactive()

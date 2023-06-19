@@ -15,6 +15,7 @@ public static class EventManager
     public static UnityEvent OnGainMoneyUI = new UnityEvent();
     public static UnityEvent OnSpendMoney = new UnityEvent();
     public static UnityEvent onHeatAdd = new UnityEvent();
+    public static UnityEvent<float, bool> onFireAdd = new UnityEvent<float, bool>();
     public static UnityEvent<bool> OnMachineMaxHeat = new UnityEvent<bool>();
     public static UnityEvent<bool> onCoolMachine = new UnityEvent<bool>();
     public static UnityEvent<bool> OnCoolingComplete = new UnityEvent<bool>();

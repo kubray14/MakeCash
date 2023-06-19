@@ -15,12 +15,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int mergingPipeIndex = 0;
     [SerializeField] private ParticleSystem upgradeParticle;
     [SerializeField] private ParticleSystem cardChangeParticle;
+    [SerializeField] private ParticleSystem cardBurnParticle;
     [SerializeField] private Mesh greenPipeMesh;
-     [SerializeField] private Mesh greenShortPipeMesh;
+    [SerializeField] private Mesh greenShortPipeMesh;
     [SerializeField] private Mesh yellowShortPipeMesh;
     [SerializeField] private GameObject card1;
     [SerializeField] private GameObject card2;
     public bool isTouch = false;
+    public List<MeshRenderer> renderers;
 
 
     private void Start()
@@ -33,8 +35,38 @@ public class PlayerController : MonoBehaviour
         EventManager.OnPipeMerge.AddListener(PipeMerge);
         EventManager.OnCoinValueUpgrade.AddListener(moneyAmountIncrease);
         EventManager.OnNewCardUpgrade.AddListener(UpgradeCard);
+        EventManager.onFireAdd.AddListener(CardBurning);
 
         card2.gameObject.SetActive(false);
+    }
+
+    private void CardBurning(float burnAmount, bool isBurning)
+    {
+        foreach (var r in renderers)
+        {
+            r.material.color = new Color(1, (1 - burnAmount), (1 - burnAmount), r.material.color.a);
+        }
+
+        if (isBurning)
+        {
+            if (!cardBurnParticle.isPlaying)
+            {
+                cardBurnParticle.Play();
+            }
+            cardBurnParticle.emissionRate = 20 + burnAmount * 20;
+        }
+        else
+        {
+            if (burnAmount <= 0.5f)
+            {
+                cardBurnParticle.Stop();
+            }
+            else
+            {
+                cardBurnParticle.emissionRate = burnAmount * 10;
+            }
+        }
+
     }
     private void Update()
     {
@@ -45,10 +77,12 @@ public class PlayerController : MonoBehaviour
         }
         if (!(Input.touchCount != 0))
         {
+            PipeEnd();
             return;
         }
         if (!isTouch)
         {
+            PipeEnd();
             return;
         }
         EventManager.onSpinChange.Invoke(true);
@@ -59,7 +93,7 @@ public class PlayerController : MonoBehaviour
     private void MaxHeat(bool isHeat)
     {
         canPlay = isHeat;
-        EventManager.onCoolMachine.Invoke(canPlay);
+        EventManager.onCoolMachine.Invoke(false);
         PipeEnd();
     }
 
