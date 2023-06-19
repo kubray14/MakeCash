@@ -2493,6 +2493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinMeshList:
+  - {fileID: 4416179215681393712, guid: 7f392a54ded1a0b4ea82da3550867119, type: 3}
   - {fileID: -6196009487616602462, guid: 7f392a54ded1a0b4ea82da3550867119, type: 3}
   - {fileID: -7162745860928626452, guid: 7f392a54ded1a0b4ea82da3550867119, type: 3}
   coinTypeIndex: 0
@@ -5087,10 +5088,10 @@ RectTransform:
   m_Father: {fileID: 128266628}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -11, y: -522}
-  m_SizeDelta: {x: 228.9819, y: 131.7311}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -2.9, y: 427}
+  m_SizeDelta: {x: 228.9819, y: 131.73108}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1140832647
 MonoBehaviour:

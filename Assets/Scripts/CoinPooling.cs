@@ -22,6 +22,7 @@ public class CoinPooling : MonoBehaviour
 
     private void spawnCoin(Vector3 coinPos)
     {
+        coinPool[index].GetComponent<MeshFilter>().mesh = coinMeshList[coinTypeIndex];
         coinPool[index].transform.DOKill(true);
         coinPool[index].GetComponent<Rigidbody>().velocity = Vector3.zero;
         coinPool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -67,15 +68,10 @@ public class CoinPooling : MonoBehaviour
 
     private void CoinTypeUpgrade()
     {
-        for (int i = 0; i < coinPool.Count; i++)
-        {
-            coinPool[i].gameObject.GetComponent<MeshFilter>().mesh = coinMeshList[coinTypeIndex];
-        }
         coinTypeIndex++;
         if (coinTypeIndex > coinMeshList.Count - 1)
         {
             EventManager.OnCoinTypeUpgrade.RemoveListener(CoinTypeUpgrade);
         }
-        print("RomantikHaydut changed coin type");
     }
 }
