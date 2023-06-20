@@ -7,16 +7,21 @@ public class CoinPooling : MonoBehaviour
 {
     [SerializeField] private List<Mesh> coinMeshList;
     [SerializeField] private int coinTypeIndex = 0;
-    [SerializeField] private List<GameObject> coinPool = new List<GameObject>();
+    [SerializeField] private List<Rigidbody> coinPool = new List<Rigidbody>();
     public float counter = 0;
     public int maxCoin;
     public int index = 0;
     [SerializeField] private float coinDieTime = 0.025f;
+    [SerializeField] private Vector3 coinStartScale;
+    [SerializeField] private Vector3 gravityValue;
+    [SerializeField] private Vector3 coinStartForce;
+    [SerializeField] private float coinSpawnRotationY;
     void Start()
     {
         fullingList();
         EventManager.OnSpawnCoin.AddListener(spawnCoin);
         EventManager.OnCoinTypeUpgrade.AddListener(CoinTypeUpgrade);
+        Physics.gravity = gravityValue;
 
     }
 
@@ -24,14 +29,14 @@ public class CoinPooling : MonoBehaviour
     {
         coinPool[index].GetComponent<MeshFilter>().mesh = coinMeshList[coinTypeIndex];
         coinPool[index].transform.DOKill(true);
-        coinPool[index].GetComponent<Rigidbody>().velocity = Vector3.zero;
-        coinPool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        coinPool[index].velocity = Vector3.zero;
+        coinPool[index].angularVelocity = Vector3.zero;
         coinPool[index].transform.rotation = Quaternion.Euler(0, 0, 0);
-        coinPool[index].transform.localScale = Vector3.one;
+        coinPool[index].transform.localScale = coinStartScale;
         coinPool[index].transform.position = coinPos - new Vector3(0, 0.25f, 0);
-        coinPool[index].SetActive(true);
-        coinPool[index].transform.rotation = Quaternion.Euler(Random.Range(0,0.5f),0,0);
-        coinPool[index].GetComponent<Rigidbody>().AddForce(new Vector3(0, -0.30f,0), ForceMode.Impulse);
+        coinPool[index].gameObject.SetActive(true);
+        coinPool[index].transform.rotation = Quaternion.Euler(0, Random.Range(-coinSpawnRotationY, coinSpawnRotationY), 0);
+        coinPool[index].AddForce(coinStartForce, ForceMode.Impulse);
         counter++;
         index++;
         if (index >= coinPool.Count)
@@ -45,15 +50,23 @@ public class CoinPooling : MonoBehaviour
     {
         if (counter == maxCoin)
         {
-            counter = 0;
-            int i = 0;
-            float tempTime = 0f;
-            while (i < (maxCoin - 4))
+            StartCoroutine(CoinDie_Coroutine());
+        }
+    }
+
+    private IEnumerator CoinDie_Coroutine()
+    {
+        counter = 0;
+        int i = 0;
+        while (i < (maxCoin - 4))
+        {
+            yield return new WaitForSeconds(0.1f);
+            int k = Random.Range(1, 4);
+            for (int j = 0; j < k; j++)
             {
-                coinPool[i].transform.DOScale(Vector3.zero, tempTime);
-                i++;
-                tempTime += coinDieTime;
+                coinPool[i + j].transform.DOScale(Vector3.zero, 0.5f + (j * 0.1f));
             }
+            i += k;
         }
     }
 
@@ -62,7 +75,7 @@ public class CoinPooling : MonoBehaviour
         int temp = 0;
         while (temp < transform.childCount)
         {
-            coinPool.Add(transform.GetChild(temp).gameObject);
+            coinPool.Add(transform.GetChild(temp).gameObject.GetComponent<Rigidbody>());
             temp++;
         }
     }

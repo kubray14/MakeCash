@@ -40,34 +40,7 @@ public class PlayerController : MonoBehaviour
         card2.gameObject.SetActive(false);
     }
 
-    private void CardBurning(float burnAmount, bool isBurning)
-    {
-        foreach (var r in renderers)
-        {
-            r.material.color = new Color(1, (1 - burnAmount), (1 - burnAmount), r.material.color.a);
-        }
-
-        if (isBurning)
-        {
-            if (!cardBurnParticle.isPlaying)
-            {
-                cardBurnParticle.Play();
-            }
-            cardBurnParticle.emissionRate = 20 + burnAmount * 20;
-        }
-        else
-        {
-            if (burnAmount <= 0.5f)
-            {
-                cardBurnParticle.Stop();
-            }
-            else
-            {
-                cardBurnParticle.emissionRate = burnAmount * 10;
-            }
-        }
-
-    }
+    
     private void Update()
     {
         if (!canPlay)
@@ -118,6 +91,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void PipeEndInstant()
+    {
+        for (int i = 0; i < pipeSize; i++)
+        {
+            animList[i].SetBool("instantIdle", true);
+        }
+    }
+
+    private void PipeEndInstantCancel()
+    {
+        for (int i = 0; i < pipeSize; i++)
+        {
+            animList[i].SetBool("instantIdle", false);
+        }
+    }
+
     private void PipeMerge()
     {
         StartCoroutine(PipeMerge_Coroutine());
@@ -125,6 +114,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PipeMerge_Coroutine()
     {
+        PipeEndInstant();
         float mergeTime = .75f;
         canPlay = false;
         List<Vector3> firsPositions = new List<Vector3>();
@@ -169,6 +159,7 @@ public class PlayerController : MonoBehaviour
         {
             mergingPipeIndex = 0;
         }
+        PipeEndInstantCancel();
         yield break;
     }
 
@@ -234,5 +225,34 @@ public class PlayerController : MonoBehaviour
         {
             canPlay = true;
         });
+    }
+
+    private void CardBurning(float burnAmount, bool isBurning)
+    {
+        foreach (var r in renderers)
+        {
+            r.material.color = new Color(1, (1 - burnAmount), (1 - burnAmount), r.material.color.a);
+        }
+
+        if (isBurning)
+        {
+            if (!cardBurnParticle.isPlaying)
+            {
+                cardBurnParticle.Play();
+            }
+            cardBurnParticle.emissionRate = 20 + burnAmount * 20;
+        }
+        else
+        {
+            if (burnAmount <= 0.5f)
+            {
+                cardBurnParticle.Stop();
+            }
+            else
+            {
+                cardBurnParticle.emissionRate = burnAmount * 10;
+            }
+        }
+
     }
 }

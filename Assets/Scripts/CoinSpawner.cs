@@ -7,6 +7,7 @@ using UnityEngine;
 public class CoinSpawner : MonoBehaviour
 {
     [SerializeField] private Mesh upgradeMesh;
+    private Mesh pipeCoinStartMesh;
     [SerializeField] private GameObject pipeCoin;
     [SerializeField] private float moneyMultiplier = 1f;
     [SerializeField] private TMP_Text multiplierText;
@@ -18,6 +19,7 @@ public class CoinSpawner : MonoBehaviour
     {
         DisplayMoneyMultiplier();
         playerController = FindObjectOfType<PlayerController>();
+        pipeCoinStartMesh = pipeCoin.GetComponent<MeshFilter>().mesh;
     }
 
     private void SpawnCoin()
@@ -55,7 +57,15 @@ public class CoinSpawner : MonoBehaviour
         DisplayMoneyMultiplier();
         transform.parent.GetComponent<MeshFilter>().mesh = newMesh;
         // Color change.
-        pipeCoin.GetComponent<MeshFilter>().mesh = upgradeMesh;
+        if (moneyMultiplier > 1)
+        {
+            pipeCoin.GetComponent<MeshFilter>().mesh = upgradeMesh;
+        }
+        else
+        {
+            pipeCoin.GetComponent<MeshFilter>().mesh = pipeCoinStartMesh;
+        }
+
     }
 
     public void ResetUpgrade()

@@ -22,6 +22,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject newCardProcessUI;
     [SerializeField] private GameObject newCardUpgradeUI;
     [SerializeField] private Button newCardButton;
+    [SerializeField] private Button commercialMoneyButton;
     private bool canUpgradeCard = true;
     private PlayerController playerController;
 
@@ -141,7 +142,22 @@ public class UIController : MonoBehaviour
         EventManager.onHeatAdd.AddListener(addHeat);
         EventManager.OnGainMoney.AddListener(MoneyUIPopup);
         EventManager.OnNewCardProcess.AddListener(NewCardProcess);
+        commercialMoneyButton.onClick.AddListener(() =>
+        {
+            EventManager.OnGainMoney.Invoke(500);
+            commercialMoneyButton.interactable = false;
+            commercialMoneyButton.transform.DOScale(Vector3.zero, 1f);
+            EventManager.OnGainMoneyUI.Invoke();
+        });
         CheckCostInactive();
+        StartCoroutine(CommercialMoneyDisplay_Coroutine());
+    }
+
+    private IEnumerator CommercialMoneyDisplay_Coroutine()
+    {
+        yield return new WaitForSeconds(20);
+        commercialMoneyButton.gameObject.SetActive(true);
+        commercialMoneyButton.transform.DOScale(Vector3.zero, 1f).From().SetEase(Ease.OutBounce);
     }
 
     private void NewCardProcess()
@@ -191,6 +207,7 @@ public class UIController : MonoBehaviour
     {
         if (!isHeat)
         {
+            print("x");
             heat.DOColor(new Color(0, 1, 0), 2f).OnUpdate(() => { EventManager.onFireAdd.Invoke(heat.fillAmount, false); });
 
             heat.DOFillAmount(0, 2f).OnComplete(() =>
@@ -201,7 +218,15 @@ public class UIController : MonoBehaviour
         else
         {
             heat.DOColor(new Color(0, 1, 0), 2f);
-            heat.DOFillAmount(0, 2f).OnUpdate(() => { EventManager.onFireAdd.Invoke(heat.fillAmount, false); });
+            if (heat.fillAmount >= 0.5f)
+            {
+                heat.DOFillAmount(0, 2f).OnUpdate(() => { EventManager.onFireAdd.Invoke(heat.fillAmount, false); });
+            }
+            else
+            {
+                heat.DOFillAmount(0, 2f);
+            }
+
         }
     }
     private void CheckCostInactive()

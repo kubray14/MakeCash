@@ -22,7 +22,7 @@ public class ButtonScript : MonoBehaviour, IPointerDownHandler
         myButton.onClick.AddListener(() =>
         {
             EventManager.onSpinChange.Invoke(false);
-            EventManager.onCoolMachine.Invoke(false);
+            EventManager.onCoolMachine.Invoke(true);
             controller.PipeEnd();
             controller.isTouch = false;
         });
