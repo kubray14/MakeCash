@@ -30,7 +30,8 @@ public class CoinPooling : MonoBehaviour
         coinPool[index].transform.localScale = Vector3.one;
         coinPool[index].transform.position = coinPos - new Vector3(0, 0.25f, 0);
         coinPool[index].SetActive(true);
-        coinPool[index].GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-0.15f, 0.15f), -0.25f, -0.1f), ForceMode.Impulse);
+        coinPool[index].transform.rotation = Quaternion.Euler(Random.Range(0,0.5f),0,0);
+        coinPool[index].GetComponent<Rigidbody>().AddForce(new Vector3(0, -0.30f,0), ForceMode.Impulse);
         counter++;
         index++;
         if (index >= coinPool.Count)
