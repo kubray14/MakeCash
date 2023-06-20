@@ -224,7 +224,17 @@ public class PlayerController : MonoBehaviour
         card2.transform.DOScale(Vector3.one, tweenTime).SetEase(Ease.OutBounce).OnComplete(() =>
         {
             canPlay = true;
+            ChangeCardRenderers();
         });
+    }
+
+    private void ChangeCardRenderers()
+    {
+        renderers.Clear();
+        foreach (Transform t in card2.transform)
+        {
+            renderers.Add(t.GetComponent<MeshRenderer>());
+        }
     }
 
     private void CardBurning(float burnAmount, bool isBurning)

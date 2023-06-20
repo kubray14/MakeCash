@@ -8,6 +8,7 @@ public class CoinPooling : MonoBehaviour
     [SerializeField] private List<Mesh> coinMeshList;
     [SerializeField] private int coinTypeIndex = 0;
     [SerializeField] private List<Rigidbody> coinPool = new List<Rigidbody>();
+    [SerializeField] private List<MeshCollider> coinPoolMeshColliders = new List<MeshCollider>();
     public float counter = 0;
     public int maxCoin;
     public int index = 0;
@@ -28,6 +29,7 @@ public class CoinPooling : MonoBehaviour
     private void spawnCoin(Vector3 coinPos)
     {
         coinPool[index].GetComponent<MeshFilter>().mesh = coinMeshList[coinTypeIndex];
+        coinPoolMeshColliders[index].sharedMesh = coinMeshList[coinTypeIndex];
         coinPool[index].transform.DOKill(true);
         coinPool[index].velocity = Vector3.zero;
         coinPool[index].angularVelocity = Vector3.zero;
@@ -56,15 +58,21 @@ public class CoinPooling : MonoBehaviour
 
     private IEnumerator CoinDie_Coroutine()
     {
+        yield return null;
         counter = 0;
-        int i = 0;
+
+        int i = 4;
         while (i < (maxCoin - 4))
         {
-            yield return new WaitForSeconds(0.1f);
+            //yield return new WaitForSeconds(0.1f);
+
             int k = Random.Range(1, 4);
             for (int j = 0; j < k; j++)
             {
-                coinPool[i + j].transform.DOScale(Vector3.zero, 0.5f + (j * 0.1f));
+                if (i + k < maxCoin - 4)
+                {
+                    coinPool[i + j].transform.DOScale(Vector3.zero, 0.5f + (j * 0.1f));
+                }
             }
             i += k;
         }
@@ -76,6 +84,7 @@ public class CoinPooling : MonoBehaviour
         while (temp < transform.childCount)
         {
             coinPool.Add(transform.GetChild(temp).gameObject.GetComponent<Rigidbody>());
+            coinPoolMeshColliders.Add(transform.GetChild(temp).gameObject.GetComponent<MeshCollider>());
             temp++;
         }
     }

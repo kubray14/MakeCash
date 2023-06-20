@@ -23,6 +23,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject newCardUpgradeUI;
     [SerializeField] private Button newCardButton;
     [SerializeField] private Button commercialMoneyButton;
+    [SerializeField] private GameObject commercialMoneyAnimation;
+    [SerializeField] private RectTransform commercialMoneyAnimationStartPos;
     private bool canUpgradeCard = true;
     private PlayerController playerController;
 
@@ -144,10 +146,9 @@ public class UIController : MonoBehaviour
         EventManager.OnNewCardProcess.AddListener(NewCardProcess);
         commercialMoneyButton.onClick.AddListener(() =>
         {
-            EventManager.OnGainMoney.Invoke(500);
             commercialMoneyButton.interactable = false;
             commercialMoneyButton.transform.DOScale(Vector3.zero, 1f);
-            EventManager.OnGainMoneyUI.Invoke();
+            StartCoroutine(CommercialMoneyAnimation_Coroutine(commercialMoneyAnimationStartPos.anchoredPosition));
         });
         CheckCostInactive();
         StartCoroutine(CommercialMoneyDisplay_Coroutine());
@@ -155,9 +156,27 @@ public class UIController : MonoBehaviour
 
     private IEnumerator CommercialMoneyDisplay_Coroutine()
     {
-        yield return new WaitForSeconds(20);
+        yield return new WaitForSeconds(5);
         commercialMoneyButton.gameObject.SetActive(true);
         commercialMoneyButton.transform.DOScale(Vector3.zero, 1f).From().SetEase(Ease.OutBounce);
+    }
+
+    private IEnumerator CommercialMoneyAnimation_Coroutine(Vector2 anchorPos)
+    {
+        commercialMoneyAnimation.gameObject.SetActive(true);   
+        foreach (Transform t in commercialMoneyAnimation.transform)
+        {
+            yield return new WaitForSeconds(0.1f);
+            t.GetComponent<RectTransform>().DOAnchorPos(anchorPos , 1f).From().OnComplete(() =>
+            {
+                t.gameObject.SetActive(false);
+            });
+
+        }
+        yield return new WaitForSeconds(1f);
+        commercialMoneyAnimation.gameObject.SetActive(false);
+        EventManager.OnGainMoney.Invoke(500);
+        EventManager.OnGainMoneyUI.Invoke();
     }
 
     private void NewCardProcess()
@@ -207,7 +226,6 @@ public class UIController : MonoBehaviour
     {
         if (!isHeat)
         {
-            print("x");
             heat.DOColor(new Color(0, 1, 0), 2f).OnUpdate(() => { EventManager.onFireAdd.Invoke(heat.fillAmount, false); });
 
             heat.DOFillAmount(0, 2f).OnComplete(() =>
