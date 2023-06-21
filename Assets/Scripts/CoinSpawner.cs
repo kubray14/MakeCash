@@ -12,11 +12,13 @@ public class CoinSpawner : MonoBehaviour
     [SerializeField] private float moneyMultiplier = 1f;
     [SerializeField] private TMP_Text multiplierText;
     [SerializeField] private TMP_Text gainedMoneyText;
+    private AudioSource coinSound;
     private float tweenTime = 1f;
     private PlayerController playerController;
 
     private void Start()
     {
+        coinSound = GetComponent<AudioSource>();
         DisplayMoneyMultiplier();
         playerController = FindObjectOfType<PlayerController>();
         pipeCoinStartMesh = pipeCoin.GetComponent<MeshFilter>().mesh;
@@ -66,6 +68,10 @@ public class CoinSpawner : MonoBehaviour
         }
     }
 
+    public void playCoinSound()
+    {
+        coinSound.Play();
+    }
     public void ResetUpgrade()
     {
         moneyMultiplier = 1;

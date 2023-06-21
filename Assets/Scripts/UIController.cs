@@ -52,6 +52,9 @@ public class UIController : MonoBehaviour
     private int incomeLevel = 1;
     private int pipeLevel = 1;
 
+    private AudioSource upgradeSound;
+    [SerializeField] private AudioClip newCard;
+
     private void Awake()
     {
         playerController = FindObjectOfType<PlayerController>();
@@ -59,6 +62,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
+        upgradeSound = GetComponent<AudioSource>();
         speedCost_Text.text = "$" + speedCost.ToString("0.0");
         incomeCost_Text.text = "$" + incomeCost.ToString("0.0");
         pipeCost_Text.text = "$" + pipeCost.ToString("0.0");
@@ -69,6 +73,7 @@ public class UIController : MonoBehaviour
 
         speedButton.onClick.AddListener(() =>
         {
+            upgradeSound.Play();
             playerController.DecreaseMoney(speedCost);
             speedCost += speed_value;
             speed_value += 0.1f;
@@ -81,6 +86,7 @@ public class UIController : MonoBehaviour
 
         incomeButton.onClick.AddListener(() =>
         {
+            upgradeSound.Play();
             playerController.DecreaseMoney(incomeCost);
             incomeCost += income_value;
             income_value += 0.1f;
@@ -97,6 +103,7 @@ public class UIController : MonoBehaviour
 
         pipeButton.onClick.AddListener(() =>
         {
+            upgradeSound.Play();
             EventManager.OnAddPipe.Invoke();
             playerController.DecreaseMoney(pipeCost);
             pipeCost += pipe_value;
@@ -113,6 +120,8 @@ public class UIController : MonoBehaviour
 
         mergeButton.onClick.AddListener(() =>
         {
+            upgradeSound.Play();
+            upgradeSound.PlayOneShot(newCard);
             EventManager.OnPipeMerge.Invoke();
             mergeButton.gameObject.SetActive(false);
         });
