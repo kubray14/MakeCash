@@ -29,7 +29,7 @@ public class CoinPooling : MonoBehaviour
     private void spawnCoin(Vector3 coinPos)
     {
         coinPool[index].GetComponent<MeshFilter>().mesh = coinMeshList[coinTypeIndex];
-        coinPoolMeshColliders[index].sharedMesh = coinMeshList[coinTypeIndex];
+       // coinPoolMeshColliders[index].sharedMesh = coinMeshList[coinTypeIndex];
         coinPool[index].transform.DOKill(true);
         coinPool[index].velocity = Vector3.zero;
         coinPool[index].angularVelocity = Vector3.zero;
@@ -92,7 +92,7 @@ public class CoinPooling : MonoBehaviour
     private void CoinTypeUpgrade()
     {
         coinTypeIndex++;
-        if (coinTypeIndex > coinMeshList.Count - 1)
+        if (coinTypeIndex >= coinMeshList.Count - 1)
         {
             EventManager.OnCoinTypeUpgrade.RemoveListener(CoinTypeUpgrade);
         }

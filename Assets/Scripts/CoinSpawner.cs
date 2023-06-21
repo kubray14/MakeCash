@@ -56,16 +56,14 @@ public class CoinSpawner : MonoBehaviour
         moneyMultiplier *= 4;
         DisplayMoneyMultiplier();
         transform.parent.GetComponent<MeshFilter>().mesh = newMesh;
-        // Color change.
         if (moneyMultiplier > 1)
         {
-            pipeCoin.GetComponent<MeshFilter>().mesh = upgradeMesh;
+            pipeCoin.GetComponent<MeshFilter>().mesh = upgradeMesh; //after merge, change pipe mesh again to green
         }
         else
         {
-            pipeCoin.GetComponent<MeshFilter>().mesh = pipeCoinStartMesh;
+            pipeCoin.GetComponent<MeshFilter>().mesh = pipeCoinStartMesh; //change pipe mesh again to yellow
         }
-
     }
 
     public void ResetUpgrade()
